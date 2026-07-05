@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Downloads Center | SchoolERP-Pro</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/animation.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="../css/student.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="../js/db.js"></script>
+    <script src="../js/auth.js"></script>
+    <style>
+        .download-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+        }
+        @media (max-width: 768px) {
+            .download-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .download-item-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 24px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.02);
+            border: 1px solid var(--border-color);
+        }
+        .download-item-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .download-item-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--border-radius);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-wrapper">
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <i class="fa-solid fa-graduation-cap"></i>
+                <span>SchoolERP-Pro</span>
+            </div>
+            <div class="sidebar-user">
+                <div class="sidebar-user-avatar"><i class="fa-solid fa-user-graduate"></i></div>
+                <div class="sidebar-user-info">
+                    <div class="sidebar-user-name" id="user-display-name">Loading...</div>
+                    <div class="sidebar-user-role">Student</div>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-item-link">
+                    <i class="fa-solid fa-gauge"></i> Dashboard
+                </a>
+                <a href="attendance.html" class="nav-item-link">
+                    <i class="fa-solid fa-calendar-check"></i> My Attendance
+                </a>
+                <a href="results.html" class="nav-item-link">
+                    <i class="fa-solid fa-square-poll-vertical"></i> My Results
+                </a>
+                <a href="homework.html" class="nav-item-link">
+                    <i class="fa-solid fa-book-open"></i> Homework Files
+                </a>
+                <a href="notices.html" class="nav-item-link">
+                    <i class="fa-solid fa-bullhorn"></i> Notices Feed
+                </a>
+                <a href="profile.html" class="nav-item-link">
+                    <i class="fa-solid fa-user"></i> My Profile
+                </a>
+                <a href="download.html" class="nav-item-link active">
+                    <i class="fa-solid fa-download"></i> Downloads
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <button onclick="db.logout()" class="nav-item-link text-danger" style="background: none; border: none; width: 100%; text-align: left; cursor: pointer; padding: 12px 16px;">
+                    <i class="fa-solid fa-right-from-bracket"></i> Log Out
+                </button>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="top-header">
+                <div class="header-left">
+                    <button class="sidebar-toggle-btn" id="toggle-sidebar-btn"><i class="fa-solid fa-bars"></i></button>
+                    <h1 class="header-title">Resource Downloads</h1>
+                </div>
+                <div class="header-right">
+                    <button class="header-action-btn" id="theme-toggle-btn"><i class="fa-solid fa-moon" id="theme-toggle-icon"></i></button>
+                </div>
+            </header>
+
+            <div class="download-grid anim-slide-up">
+                <!-- Academic Calendar -->
+                <div class="download-item-card glass-card">
+                    <div class="download-item-info">
+                        <div class="download-item-icon" style="background: rgba(79,70,229,0.1); color: var(--primary);">
+                            <i class="fa-regular fa-calendar-days"></i>
+                        </div>
+                        <div>
+                            <h4 style="font-weight: 700; margin-bottom: 4px;">Academic Calendar 2026-2027</h4>
+                            <span style="font-size: 0.8rem; color: var(--text-muted);">Format: Text, Size: 1.2 KB</span>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" style="padding: 10px 18px;" onclick="triggerDownload('calendar')">
+                        <i class="fa-solid fa-cloud-arrow-down"></i>
+                    </button>
+                </div>
+
+                <!-- Syllabus Math -->
+                <div class="download-item-card glass-card">
+                    <div class="download-item-info">
+                        <div class="download-item-icon" style="background: rgba(236,72,153,0.1); color: var(--accent);">
+                            <i class="fa-solid fa-book-bookmark"></i>
+                        </div>
+                        <div>
+                            <h4 style="font-weight: 700; margin-bottom: 4px;">Grade 10 MATH101 Syllabus</h4>
+                            <span style="font-size: 0.8rem; color: var(--text-muted);">Format: Text, Size: 800 B</span>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" style="padding: 10px 18px;" onclick="triggerDownload('syllabus')">
+                        <i class="fa-solid fa-cloud-arrow-down"></i>
+                    </button>
+                </div>
+
+                <!-- Conduct Rules -->
+                <div class="download-item-card glass-card">
+                    <div class="download-item-info">
+                        <div class="download-item-icon" style="background: rgba(16,185,129,0.1); color: var(--success);">
+                            <i class="fa-solid fa-scale-balanced"></i>
+                        </div>
+                        <div>
+                            <h4 style="font-weight: 700; margin-bottom: 4px;">Student Code of Conduct</h4>
+                            <span style="font-size: 0.8rem; color: var(--text-muted);">Format: Text, Size: 1.1 KB</span>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" style="padding: 10px 18px;" onclick="triggerDownload('rules')">
+                        <i class="fa-solid fa-cloud-arrow-down"></i>
+                    </button>
+                </div>
+
+                <!-- Sports Form -->
+                <div class="download-item-card glass-card">
+                    <div class="download-item-info">
+                        <div class="download-item-icon" style="background: rgba(245,158,11,0.1); color: var(--warning);">
+                            <i class="fa-regular fa-file-lines"></i>
+                        </div>
+                        <div>
+                            <h4 style="font-weight: 700; margin-bottom: 4px;">Athletic Meet Registration Form</h4>
+                            <span style="font-size: 0.8rem; color: var(--text-muted);">Format: Text, Size: 900 B</span>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" style="padding: 10px 18px;" onclick="triggerDownload('sports')">
+                        <i class="fa-solid fa-cloud-arrow-down"></i>
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../js/dashboard.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('user-display-name').textContent = sanitize(window.profile_details.name);
+        });
+
+        function triggerDownload(doc) {
+            let fileName = 'document.txt';
+            let content = '';
+
+            if (doc === 'calendar') {
+                fileName = 'Academic_Calendar_2026_2027.txt';
+                content = "St. Antigravity International School\nAcademic Calendar 2026-2027\n\n"
+                        + "1. Term 1 Commences: August 17, 2026\n"
+                        + "2. Midterm Evaluations: October 12-16, 2026\n"
+                        + "3. Winter Break: December 21, 2026 - January 4, 2027\n"
+                        + "4. Term 2 Commences: January 5, 2027\n"
+                        + "5. Annual Sports Meet: February 18-20, 2027\n"
+                        + "6. Final Examinations: May 24 - June 4, 2027\n"
+                        + "7. Graduation Ceremony: June 15, 2027\n";
+            } else if (doc === 'syllabus') {
+                fileName = 'Grade_10_Syllabus_MATH101.txt';
+                content = "St. Antigravity International School\nGrade 10 Mathematics Course Outline (MATH101)\n\n"
+                        + "Module 1: Quadratic Equations and Functions\n"
+                        + "Module 2: Coordinate Geometry and Linear Graphs\n"
+                        + "Module 3: Trigonometric Ratios and Wave Functions\n"
+                        + "Module 4: Probability Distribution and Statistics Analysis\n"
+                        + "Module 5: Introduction to Limits and Differential Calculus\n\n"
+                        + "Grading Scale: Quizzes (20%), Midterm (30%), Projects (10%), Final Exam (40%).\n";
+            } else if (doc === 'rules') {
+                fileName = 'Student_Code_of_Conduct.txt';
+                content = "St. Antigravity International School\nCode of Student Conduct & Discipline\n\n"
+                        + "1. Dress Code: Students must wear the official clean school uniform on all weekdays.\n"
+                        + "2. Attendance: A minimum of 75% attendance is required to qualify for term examinations.\n"
+                        + "3. Academic Integrity: Plagiarism, cheating, or copying homework sheets is strictly prohibited.\n"
+                        + "4. Mobile Policy: Mobile phones must be powered off during active class hours.\n"
+                        + "5. Respect: Maintain respectful conduct towards instructors, staff, and fellow peers.\n";
+            } else if (doc === 'sports') {
+                fileName = 'Athletic_Meet_Registration.txt';
+                content = "St. Antigravity International School\nAnnual Athletic Meet 2027 Registration Form\n\n"
+                        + "Please fill out and submit to the Physical Education office before Jan 30, 2027.\n\n"
+                        + "Student Name: _________________________________\n"
+                        + "Admission Number: ____________________________\n"
+                        + "Class / Section: ______________________________\n\n"
+                        + "Participating Events (Check max 3):\n"
+                        + "[ ] 100m Sprint\n"
+                        + "[ ] 400m Relay\n"
+                        + "[ ] High Jump\n"
+                        + "[ ] Shot Put\n"
+                        + "[ ] Long Jump\n\n"
+                        + "Guardian Approval Signature: __________________\n";
+            }
+
+            const blob = new Blob([content], { type: 'text/plain' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = fileName;
+            link.click();
+            URL.revokeObjectURL(link.href);
+        }
+    </script>
+</body>
+</html>

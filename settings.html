@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Settings | SchoolERP-Pro</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/animation.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="../css/admin.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="../js/db.js"></script>
+    <script src="../js/auth.js"></script>
+    <style>
+        .settings-grid {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 24px;
+            align-items: start;
+        }
+        @media (max-width: 992px) {
+            .settings-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .form-row-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-wrapper">
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <i class="fa-solid fa-graduation-cap"></i>
+                <span>SchoolERP-Pro</span>
+            </div>
+            <div class="sidebar-user">
+                <div class="sidebar-user-avatar"><i class="fa-solid fa-user-shield"></i></div>
+                <div class="sidebar-user-info">
+                    <div class="sidebar-user-name" id="user-display-name">Loading...</div>
+                    <div class="sidebar-user-role">Administrator</div>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-item-link">
+                    <i class="fa-solid fa-gauge"></i> Dashboard
+                </a>
+                <a href="students.html" class="nav-item-link">
+                    <i class="fa-solid fa-user-graduate"></i> Students
+                </a>
+                <a href="teachers.html" class="nav-item-link">
+                    <i class="fa-solid fa-chalkboard-user"></i> Teachers
+                </a>
+                <a href="classes.html" class="nav-item-link">
+                    <i class="fa-solid fa-school"></i> Classes
+                </a>
+                <a href="subjects.html" class="nav-item-link">
+                    <i class="fa-solid fa-book"></i> Subjects
+                </a>
+                <a href="attendance.html" class="nav-item-link">
+                    <i class="fa-solid fa-calendar-check"></i> Attendance
+                </a>
+                <a href="marks.html" class="nav-item-link">
+                    <i class="fa-solid fa-file-signature"></i> Marks
+                </a>
+                <a href="results.html" class="nav-item-link">
+                    <i class="fa-solid fa-square-poll-vertical"></i> Results
+                </a>
+                <a href="certificates.html" class="nav-item-link">
+                    <i class="fa-solid fa-award"></i> Certificates
+                </a>
+                <a href="reports.html" class="nav-item-link">
+                    <i class="fa-solid fa-chart-line"></i> Reports
+                </a>
+                <a href="settings.html" class="nav-item-link active">
+                    <i class="fa-solid fa-sliders"></i> Settings
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <button onclick="db.logout()" class="nav-item-link text-danger" style="background: none; border: none; width: 100%; text-align: left; cursor: pointer; padding: 12px 16px;">
+                    <i class="fa-solid fa-right-from-bracket"></i> Log Out
+                </button>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="top-header">
+                <div class="header-left">
+                    <button class="sidebar-toggle-btn" id="toggle-sidebar-btn"><i class="fa-solid fa-bars"></i></button>
+                    <h1 class="header-title">Global Settings</h1>
+                </div>
+            </header>
+
+            <div class="settings-grid anim-slide-up">
+                <!-- System Config -->
+                <div class="glass-card" style="padding: 32px;">
+                    <h3 style="font-weight: 700; margin-bottom: 24px; border-bottom: 1px solid var(--border-color); padding-bottom: 12px; color: var(--primary);">Global System Parameters</h3>
+                    <form id="global-settings-form">
+                        <div class="form-group">
+                            <label class="form-label" for="school_name">Institution School Name</label>
+                            <input type="text" id="school_name" class="form-control" required value="">
+                        </div>
+
+                        <div class="form-row-2">
+                            <div class="form-group">
+                                <label class="form-label" for="school_email">Official Contact Email</label>
+                                <input type="email" id="school_email" class="form-control" required value="">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="school_phone">Official Contact Phone</label>
+                                <input type="text" id="school_phone" class="form-control" required value="">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="school_address">Street Location Address</label>
+                            <textarea id="school_address" class="form-control" style="height: 60px;" required></textarea>
+                        </div>
+
+                        <div class="form-row-2">
+                            <div class="form-group">
+                                <label class="form-label" for="academic_session">Academic Session</label>
+                                <input type="text" id="academic_session" class="form-control" required placeholder="e.g. 2026-2027" value="">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="currency">Local Currency Symbol</label>
+                                <input type="text" id="currency" class="form-control" required placeholder="e.g. $" value="">
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Save Global System Settings</button>
+                    </form>
+                </div>
+
+                <!-- Admin Profile Credentials -->
+                <div class="glass-card" style="padding: 32px;">
+                    <h3 style="font-weight: 700; margin-bottom: 24px; border-bottom: 1px solid var(--border-color); padding-bottom: 12px; color: var(--accent);">Admin Credentials</h3>
+                    
+                    <form id="profile-form" style="margin-bottom: 40px;">
+                        <div class="form-group">
+                            <label class="form-label" for="email">Admin Email Address</label>
+                            <input type="email" id="email" class="form-control" required value="">
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">Update Email</button>
+                    </form>
+
+                    <h3 style="font-weight: 700; margin-bottom: 24px; border-bottom: 1px solid var(--border-color); padding-bottom: 12px; color: var(--accent);">Change Admin Password</h3>
+                    <form id="password-form">
+                        <div class="form-group">
+                            <label class="form-label" for="old_password">Current Password</label>
+                            <input type="password" id="old_password" class="form-control" required placeholder="Enter current password">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="new_password">New Password</label>
+                            <input type="password" id="new_password" class="form-control" required placeholder="Minimum 6 characters">
+                        </div>
+                        <button type="submit" class="btn btn-accent btn-block">Change Password</button>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../js/dashboard.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const userId = window.current_user.id;
+            document.getElementById('user-display-name').textContent = sanitize(window.current_user.username);
+
+            // Fetch settings
+            const settings = db.getSettings();
+            document.getElementById('school_name').value = settings.school_name || '';
+            document.getElementById('school_email').value = settings.school_email || '';
+            document.getElementById('school_phone').value = settings.school_phone || '';
+            document.getElementById('school_address').value = settings.school_address || '';
+            document.getElementById('academic_session').value = settings.academic_session || '';
+            document.getElementById('currency').value = settings.currency || '';
+
+            document.getElementById('email').value = window.current_user.email;
+
+            // Submit global settings
+            document.getElementById('global-settings-form').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const newSettings = {
+                    school_name: document.getElementById('school_name').value.trim(),
+                    school_email: document.getElementById('school_email').value.trim(),
+                    school_phone: document.getElementById('school_phone').value.trim(),
+                    school_address: document.getElementById('school_address').value.trim(),
+                    academic_session: document.getElementById('academic_session').value.trim(),
+                    currency: document.getElementById('currency').value.trim()
+                };
+
+                db.saveSettings(newSettings);
+                alert('Global system settings saved successfully!');
+            });
+
+            // Submit email edit
+            document.getElementById('profile-form').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const newEmail = document.getElementById('email').value.trim();
+
+                const users = db.getCollection(window.DB_KEYS.USERS);
+                const uIdx = users.findIndex(u => u.id === userId);
+                if (uIdx !== -1) {
+                    users[uIdx].email = newEmail;
+                    db.saveCollection(window.DB_KEYS.USERS, users);
+
+                    // Update session
+                    const session = db.getCurrentSession();
+                    session.user.email = newEmail;
+                    sessionStorage.setItem('school_erp_active_session', JSON.stringify(session));
+
+                    alert('Admin email updated successfully!');
+                    location.reload();
+                }
+            });
+
+            // Submit password change
+            document.getElementById('password-form').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const oldPass = document.getElementById('old_password').value;
+                const newPass = document.getElementById('new_password').value;
+
+                if (newPass.length < 6) {
+                    alert('New password must be at least 6 characters long.');
+                    return;
+                }
+
+                const users = db.getCollection(window.DB_KEYS.USERS);
+                const uIdx = users.findIndex(u => u.id === userId);
+                if (uIdx !== -1) {
+                    if (users[uIdx].password !== oldPass) {
+                        alert('Incorrect current password.');
+                        return;
+                    }
+
+                    users[uIdx].password = newPass;
+                    db.saveCollection(window.DB_KEYS.USERS, users);
+                    alert('Password changed successfully!');
+                    document.getElementById('password-form').reset();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

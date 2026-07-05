@@ -1,0 +1,86 @@
+/*
+ * SchoolERP-Pro Responsive Stylesheet
+ * Custom media query breakpoints for flexible fluid scaling across form factors.
+ */
+
+/* --- TABLET BREAKPOINT (<= 1024px) --- */
+@media (max-width: 1024px) {
+    html {
+        font-size: 15px; /* Scale font down slightly */
+    }
+    
+    .container {
+        padding: 0 20px;
+    }
+    
+    /* Adjust grid systems */
+    .grid-2, .grid-3, .grid-4 {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 20px !important;
+    }
+}
+
+/* --- MOBILE LANDSCAPE BREAKPOINT (<= 768px) --- */
+@media (max-width: 768px) {
+    html {
+        font-size: 14px;
+    }
+    
+    /* Common page elements */
+    .hero-title {
+        font-size: 2.5rem !important;
+    }
+    
+    .hero-subtitle {
+        font-size: 1.1rem !important;
+    }
+    
+    .section-title {
+        font-size: 2rem !important;
+    }
+    
+    /* Portals structure */
+    .sidebar {
+        width: 100% !important;
+        position: relative !important;
+        height: auto !important;
+        z-index: 100;
+    }
+    
+    .main-content {
+        margin-left: 0 !important;
+        padding: 15px !important;
+    }
+    
+    /* Stack elements vertically */
+    .flex-row-resp {
+        flex-direction: column !important;
+        align-items: stretch !important;
+    }
+}
+
+/* --- MOBILE PORTRAIT BREAKPOINT (<= 576px) --- */
+@media (max-width: 576px) {
+    html {
+        font-size: 13px;
+    }
+    
+    .grid-2, .grid-3, .grid-4 {
+        grid-template-columns: 1fr !important;
+    }
+    
+    .btn {
+        width: 100%;
+        padding: 12px 20px;
+    }
+    
+    /* Login & public cards padding optimization */
+    .glass-card {
+        padding: 24px 16px !important;
+    }
+    
+    .hero-buttons {
+        flex-direction: column;
+        gap: 12px;
+    }
+}

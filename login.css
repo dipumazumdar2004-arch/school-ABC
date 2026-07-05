@@ -1,0 +1,261 @@
+/*
+ * SchoolERP-Pro Login Styling
+ * Tailored glassmorphic inputs, role selection tabs, and credential autofill helpers.
+ */
+
+.login-body {
+    background: radial-gradient(circle at 10% 20%, rgba(243, 244, 255, 1) 0%, rgba(224, 227, 255, 1) 90.1%);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    padding: 40px 0;
+}
+
+/* Backwards-pointing glow orbs matching landing */
+.login-body .orb {
+    position: absolute;
+    border-radius: var(--radius-full);
+    filter: blur(90px);
+    z-index: -1;
+    opacity: 0.4;
+}
+.login-body .orb-1 {
+    width: 350px;
+    height: 350px;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    top: 5%;
+    right: 15%;
+}
+.login-body .orb-2 {
+    width: 300px;
+    height: 300px;
+    background: linear-gradient(135deg, #06b6d4, var(--primary));
+    bottom: 5%;
+    left: 15%;
+}
+
+.login-wrapper {
+    width: 100%;
+    max-width: 460px !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.login-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-heading);
+    font-size: 1.8rem;
+    font-weight: 800;
+    margin-bottom: 24px;
+    color: var(--text-main);
+}
+.login-logo i {
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.login-container {
+    padding: 48px 40px;
+    width: 100%;
+}
+
+.login-title {
+    font-size: 1.85rem;
+    text-align: center;
+    margin-bottom: 8px;
+    color: var(--text-main);
+}
+
+.login-subtitle {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+/* Role Selector Tabs */
+.role-selector {
+    display: flex;
+    background: rgba(255, 255, 255, 0.5);
+    border: 1px solid var(--border-color);
+    padding: 6px;
+    border-radius: var(--radius-md);
+    margin-bottom: 28px;
+}
+[data-theme="dark"] .role-selector {
+    background: rgba(15, 23, 42, 0.5);
+}
+
+.role-tab {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 0;
+    font-size: 0.9rem;
+    font-weight: 600;
+    border-radius: calc(var(--radius-md) - 4px);
+    color: var(--text-muted);
+    transition: var(--transition);
+}
+
+.role-tab:hover {
+    color: var(--text-main);
+}
+
+.role-tab.active {
+    background: #fff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    color: var(--primary);
+}
+[data-theme="dark"] .role-tab.active {
+    background: var(--dark);
+    color: #fff;
+}
+
+/* Custom Input Icons */
+.input-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.input-icon {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    pointer-events: none;
+    transition: var(--transition);
+}
+
+.input-wrapper .form-control {
+    padding-left: 48px;
+}
+
+.input-wrapper .form-control:focus ~ .input-icon {
+    color: var(--primary);
+}
+
+/* Password Toggle */
+.toggle-password {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    transition: var(--transition);
+}
+.toggle-password:hover {
+    color: var(--text-main);
+}
+
+.form-label-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    width: 100%;
+}
+
+.forgot-link {
+    font-size: 0.85rem;
+    color: var(--primary);
+    font-weight: 600;
+}
+.forgot-link:hover {
+    text-decoration: underline;
+}
+
+.btn-block {
+    width: 100%;
+    margin-top: 10px;
+}
+
+/* Alerts styling */
+.alert {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    border-radius: var(--radius-md);
+    margin-bottom: 24px;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    border: 1.5px solid transparent;
+}
+.alert-danger {
+    background: var(--danger-light);
+    border-color: rgba(239, 68, 68, 0.2);
+    color: var(--danger);
+}
+.alert-success {
+    background: var(--success-light);
+    border-color: rgba(16, 185, 129, 0.2);
+    color: var(--success);
+}
+
+/* Spinner Loader */
+.spinner {
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: #fff;
+    animation: spinLoader 0.8s linear infinite;
+}
+
+/* Auto-fill Credentials Helper */
+.test-credentials-panel {
+    margin-top: 32px;
+    border-top: 1px solid var(--border-color);
+    padding-top: 24px;
+}
+
+.helper-title {
+    font-size: 0.825rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.credential-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.cred-chip {
+    padding: 6px 12px;
+    background: rgba(255, 255, 255, 0.6);
+    border: 1px dashed var(--border-color);
+    border-radius: var(--radius-sm);
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    font-weight: 500;
+    transition: var(--transition);
+}
+[data-theme="dark"] .cred-chip {
+    background: rgba(15, 23, 42, 0.6);
+}
+
+.cred-chip:hover {
+    background: var(--primary-light);
+    color: var(--primary);
+    border-color: var(--primary);
+    transform: translateY(-1px);
+}

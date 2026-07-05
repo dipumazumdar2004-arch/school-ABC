@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Homework | SchoolERP-Pro</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/animation.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="../css/student.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="../js/db.js"></script>
+    <script src="../js/auth.js"></script>
+    <style>
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.4);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background: #ffffff;
+            color: #1e293b;
+            padding: 32px;
+            border-radius: var(--border-radius);
+            max-width: 450px;
+            width: 90%;
+            box-shadow: 0 10px 45px rgba(0,0,0,0.15);
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-wrapper">
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <i class="fa-solid fa-graduation-cap"></i>
+                <span>SchoolERP-Pro</span>
+            </div>
+            <div class="sidebar-user">
+                <div class="sidebar-user-avatar"><i class="fa-solid fa-user-graduate"></i></div>
+                <div class="sidebar-user-info">
+                    <div class="sidebar-user-name" id="user-display-name">Loading...</div>
+                    <div class="sidebar-user-role">Student</div>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-item-link">
+                    <i class="fa-solid fa-gauge"></i> Dashboard
+                </a>
+                <a href="attendance.html" class="nav-item-link">
+                    <i class="fa-solid fa-calendar-check"></i> My Attendance
+                </a>
+                <a href="results.html" class="nav-item-link">
+                    <i class="fa-solid fa-square-poll-vertical"></i> My Results
+                </a>
+                <a href="homework.html" class="nav-item-link active">
+                    <i class="fa-solid fa-book-open"></i> Homework Files
+                </a>
+                <a href="notices.html" class="nav-item-link">
+                    <i class="fa-solid fa-bullhorn"></i> Notices Feed
+                </a>
+                <a href="profile.html" class="nav-item-link">
+                    <i class="fa-solid fa-user"></i> My Profile
+                </a>
+                <a href="download.html" class="nav-item-link">
+                    <i class="fa-solid fa-download"></i> Downloads
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <button onclick="db.logout()" class="nav-item-link text-danger" style="background: none; border: none; width: 100%; text-align: left; cursor: pointer; padding: 12px 16px;">
+                    <i class="fa-solid fa-right-from-bracket"></i> Log Out
+                </button>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="top-header">
+                <div class="header-left">
+                    <button class="sidebar-toggle-btn" id="toggle-sidebar-btn"><i class="fa-solid fa-bars"></i></button>
+                    <h1 class="header-title">Homework Assignments</h1>
+                </div>
+                <div class="header-right">
+                    <button class="header-action-btn" id="theme-toggle-btn"><i class="fa-solid fa-moon" id="theme-toggle-icon"></i></button>
+                </div>
+            </header>
+
+            <!-- Assignments Table -->
+            <div class="glass-card anim-slide-up">
+                <div class="card-header">
+                    <h3 class="card-title">Assigned Tasks</h3>
+                    <i class="fa-solid fa-book-open text-muted"></i>
+                </div>
+                <div class="card-body" style="padding: 0;">
+                    <div class="table-responsive">
+                        <table class="table-custom">
+                            <thead>
+                                <tr>
+                                    <th>Subject</th>
+                                    <th>Title</th>
+                                    <th>Details Description</th>
+                                    <th>Due Date</th>
+                                    <th>Task Sheet</th>
+                                    <th>Submission Status</th>
+                                    <th style="text-align: right;">Solution Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="homework-list">
+                                <!-- Dynamic rendering -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Upload Solution Modal -->
+    <div class="modal" id="submit-modal">
+        <div class="modal-content glass-card" style="background: #ffffff; color: #1e293b;">
+            <h3 style="font-weight: 700; margin-bottom: 16px; color: var(--primary);">Upload Solution Sheet</h3>
+            <form id="submission-form">
+                <input type="hidden" name="homework_id" id="modal-homework-id">
+                <div class="form-group">
+                    <label class="form-label" for="ans_file">Select Answer File (TXT, PDF, Word)</label>
+                    <input type="file" id="ans_file" class="form-control" required>
+                </div>
+                <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 24px;">
+                    <button type="button" class="btn btn-secondary" onclick="closeSubmitModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Submit Answer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../js/dashboard.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('user-display-name').textContent = sanitize(window.profile_details.name);
+            renderHomework();
+
+            document.getElementById('submission-form').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const homeworkId = parseInt(document.getElementById('modal-homework-id').value);
+                const fileInput = document.getElementById('ans_file');
+                const fileName = fileInput.files[0] ? fileInput.files[0].name : 'answer_sheet.txt';
+
+                const submissions = db.getCollection(window.DB_KEYS.SUBMISSIONS);
+                
+                // Remove older submission if re-submitting
+                const filtered = submissions.filter(s => !(s.homework_id === homeworkId && s.student_id === window.profile_details.id));
+                
+                const newSubmission = {
+                    id: Date.now(),
+                    homework_id: homeworkId,
+                    student_id: window.profile_details.id,
+                    file_path: fileName,
+                    submission_date: new Date().toISOString().split('T')[0],
+                    marks_obtained: null,
+                    status: 'Submitted',
+                    remarks: ''
+                };
+                filtered.push(newSubmission);
+                db.saveCollection(window.DB_KEYS.SUBMISSIONS, filtered);
+
+                alert('Solution uploaded successfully!');
+                closeSubmitModal();
+                renderHomework();
+            });
+        });
+
+        function renderHomework() {
+            const studentId = window.profile_details.id;
+            const classId = window.profile_details.class_id;
+
+            const homework = db.getCollection(window.DB_KEYS.HOMEWORK);
+            const myHomework = homework.filter(h => Number(h.class_id) === Number(classId));
+            const subjects = db.getCollection(window.DB_KEYS.SUBJECTS);
+            const submissions = db.getCollection(window.DB_KEYS.SUBMISSIONS);
+
+            const container = document.getElementById('homework-list');
+            if (myHomework.length > 0) {
+                container.innerHTML = myHomework.map(h => {
+                    const sub = subjects.find(s => s.id === h.subject_id);
+                    const submission = submissions.find(s => s.homework_id === h.id && s.student_id === studentId);
+
+                    let badgeClass = 'badge-danger';
+                    let badgeText = 'Pending';
+                    let actionHtml = `<button class="btn btn-xs btn-accent" onclick="openSubmitModal(${h.id})">Upload Solution</button>`;
+                    
+                    if (submission) {
+                        badgeClass = submission.status.toLowerCase() === 'graded' ? 'badge-success' : 'badge-info';
+                        badgeText = submission.status;
+                        if (submission.status.toLowerCase() === 'graded') {
+                            badgeText += ` (${submission.marks_obtained})`;
+                            actionHtml = `<span class="text-success"><i class="fa-solid fa-circle-check"></i> Finished</span>`;
+                        } else {
+                            actionHtml = `<button class="btn btn-xs btn-accent" onclick="openSubmitModal(${h.id})">Re-submit</button>`;
+                        }
+                    }
+
+                    return `
+                        <tr>
+                            <td style="font-weight: 600;">${sanitize(sub ? sub.subject_name : 'N/A')}</td>
+                            <td style="font-weight: 600;">${sanitize(h.title)}</td>
+                            <td>${sanitize(h.description || '-')}</td>
+                            <td><span class="badge badge-warning">${sanitize(h.due_date)}</span></td>
+                            <td>
+                                <a href="#" class="forgot-link text-primary" onclick="alert('Downloading task sheet...')">
+                                    <i class="fa-solid fa-download"></i> Task Sheet
+                                </a>
+                            </td>
+                            <td><span class="badge ${badgeClass}">${badgeText}</span></td>
+                            <td style="text-align: right;">${actionHtml}</td>
+                        </tr>
+                    `;
+                }).join('');
+            } else {
+                container.innerHTML = '<tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 40px;">No homework assigned.</td></tr>';
+            }
+        }
+
+        function openSubmitModal(id) {
+            document.getElementById('modal-homework-id').value = id;
+            document.getElementById('submit-modal').style.display = 'flex';
+        }
+
+        function closeSubmitModal() {
+            document.getElementById('submit-modal').style.display = 'none';
+            document.getElementById('submission-form').reset();
+        }
+    </script>
+</body>
+</html>
