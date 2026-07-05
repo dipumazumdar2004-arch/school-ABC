@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In | SchoolERP-Pro</title>
+    
+    <!-- CSS imports -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/animation.css">
+    <link rel="stylesheet" href="css/login.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="login-body">
+    <!-- Glowing background Orbs -->
+    <div class="orb orb-1 anim-orb-1"></div>
+    <div class="orb orb-2 anim-orb-2"></div>
+
+    <div class="login-wrapper container anim-scale-up">
+        <div class="login-logo">
+            <a href="index.html">
+                <i class="fa-solid fa-graduation-cap"></i>
+                <span>SchoolERP-Pro</span>
+            </a>
+        </div>
+
+        <div class="login-container glass-card">
+            <h2 class="login-title">Welcome Back</h2>
+            <p class="login-subtitle">Please select your portal and enter your credentials</p>
+
+            <!-- Role Selector Tabs -->
+            <div class="role-selector">
+                <button type="button" class="role-tab active" data-role="student">
+                    <i class="fa-solid fa-user-graduate"></i>
+                    Student
+                </button>
+                <button type="button" class="role-tab" data-role="teacher">
+                    <i class="fa-solid fa-chalkboard-user"></i>
+                    Teacher
+                </button>
+                <button type="button" class="role-tab" data-role="admin">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    Admin
+                </button>
+            </div>
+
+            <!-- Error Notification Alert -->
+            <div class="alert alert-danger" id="login-alert" style="display: none;">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                <span class="alert-message">Invalid credentials. Please try again.</span>
+            </div>
+
+            <!-- Login Form -->
+            <form id="login-form" method="POST" action="php/login.html">
+                <!-- Hidden input to store selected role -->
+                <input type="hidden" name="role" id="selected-role" value="student">
+                
+                <div class="form-group">
+                    <label class="form-label" for="username">Username or Email</label>
+                    <div class="input-wrapper">
+                        <i class="fa-regular fa-user input-icon"></i>
+                        <input type="text" name="username" id="username" class="form-control" placeholder="Enter username" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="form-label-row">
+                        <label class="form-label" for="password">Password</label>
+                        <a href="forgot-password.html" class="forgot-link">Forgot?</a>
+                    </div>
+                    <div class="input-wrapper">
+                        <i class="fa-regular fa-lock input-icon"></i>
+                        <input type="password" name="password" id="password" class="form-control" placeholder="Enter password" required>
+                        <button type="button" class="toggle-password" id="toggle-password-btn">
+                            <i class="fa-regular fa-eye" id="toggle-password-icon"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block" id="submit-btn">
+                    <span>Sign In</span>
+                    <i class="fa-solid fa-arrow-right-to-bracket" id="submit-icon"></i>
+                    <div class="spinner" id="submit-spinner" style="display: none;"></div>
+                </button>
+            </form>
+
+            <!-- Test Credentials Helper Panel -->
+            <div class="test-credentials-panel">
+                <p class="helper-title"><i class="fa-light fa-circle-info"></i> Demo Auto-fill Credentials:</p>
+                <div class="credential-chips">
+                    <button type="button" class="cred-chip" data-role-fill="student" data-user="alice" data-pass="student123">
+                        Student: alice
+                    </button>
+                    <button type="button" class="cred-chip" data-role-fill="teacher" data-user="jdoe" data-pass="teacher123">
+                        Teacher: jdoe
+                    </button>
+                    <button type="button" class="cred-chip" data-role-fill="admin" data-user="admin" data-pass="admin123">
+                        Admin: admin
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JS Scripts -->
+    <script src="js/db.js"></script>
+    <script src="js/login.js"></script>
+</body>
+</html>

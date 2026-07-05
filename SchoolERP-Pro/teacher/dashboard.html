@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Dashboard | SchoolERP-Pro</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/animation.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="../css/teacher.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="../js/db.js"></script>
+    <script src="../js/auth.js"></script>
+</head>
+<body>
+    <div class="dashboard-wrapper">
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <i class="fa-solid fa-graduation-cap"></i>
+                <span>SchoolERP-Pro</span>
+            </div>
+            <div class="sidebar-user">
+                <div class="sidebar-user-avatar"><i class="fa-solid fa-chalkboard-user"></i></div>
+                <div class="sidebar-user-info">
+                    <div class="sidebar-user-name" id="user-display-name">Loading...</div>
+                    <div class="sidebar-user-role">Educator</div>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-item-link active">
+                    <i class="fa-solid fa-gauge"></i> Dashboard
+                </a>
+                <a href="attendance.html" class="nav-item-link">
+                    <i class="fa-solid fa-calendar-check"></i> Mark Attendance
+                </a>
+                <a href="marks.html" class="nav-item-link">
+                    <i class="fa-solid fa-file-signature"></i> Manage Marks
+                </a>
+                <a href="homework.html" class="nav-item-link">
+                    <i class="fa-solid fa-book-open"></i> Homework Assignments
+                </a>
+                <a href="subjects.html" class="nav-item-link">
+                    <i class="fa-solid fa-book"></i> My Subjects
+                </a>
+                <a href="profile.html" class="nav-item-link">
+                    <i class="fa-solid fa-user"></i> My Profile
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <button onclick="db.logout()" class="nav-item-link text-danger" style="background: none; border: none; width: 100%; text-align: left; cursor: pointer; padding: 12px 16px;">
+                    <i class="fa-solid fa-right-from-bracket"></i> Log Out
+                </button>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="top-header">
+                <div class="header-left">
+                    <button class="sidebar-toggle-btn" id="toggle-sidebar-btn"><i class="fa-solid fa-bars"></i></button>
+                    <h1 class="header-title">Teacher Dashboard</h1>
+                </div>
+                <div class="header-right">
+                    <button class="header-action-btn" id="theme-toggle-btn"><i class="fa-solid fa-moon" id="theme-toggle-icon"></i></button>
+                </div>
+            </header>
+
+            <div class="stats-grid anim-slide-up">
+                <div class="stat-card">
+                    <div class="stat-card-info">
+                        <div class="stat-card-label">Assigned Classes</div>
+                        <div class="stat-card-value" id="stat-classes">0</div>
+                    </div>
+                    <div class="stat-card-icon" style="background: rgba(79,70,229,0.1); color: var(--primary);"><i class="fa-solid fa-school"></i></div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-info">
+                        <div class="stat-card-label">Assigned Subjects</div>
+                        <div class="stat-card-value" id="stat-subjects">0</div>
+                    </div>
+                    <div class="stat-card-icon" style="background: rgba(236,72,153,0.1); color: var(--accent);"><i class="fa-solid fa-book"></i></div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-info">
+                        <div class="stat-card-label">Active Students Taught</div>
+                        <div class="stat-card-value" id="stat-students">0</div>
+                    </div>
+                    <div class="stat-card-icon" style="background: rgba(16,185,129,0.1); color: var(--success);"><i class="fa-solid fa-users"></i></div>
+                </div>
+            </div>
+
+            <div class="dashboard-grid anim-slide-up" style="margin-top: 24px;">
+                <!-- Notices feed -->
+                <div class="glass-card">
+                    <div class="card-header">
+                        <h3 class="card-title">School Announcements</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="notice-timeline" id="notices-list">
+                            <!-- JS dynamic rendering -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Schedule / Class list overview -->
+                <div class="glass-card">
+                    <div class="card-header">
+                        <h3 class="card-title">My Mapped Classes</h3>
+                    </div>
+                    <div class="card-body" style="padding: 0;">
+                        <div class="table-responsive">
+                            <table class="table-custom">
+                                <thead>
+                                    <tr>
+                                        <th>Class Name</th>
+                                        <th>Section</th>
+                                        <th>Subject Name</th>
+                                        <th>Subject Code</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="assignments-list">
+                                    <!-- Rendered dynamically -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../js/dashboard.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const teacherId = window.profile_details.id;
+            document.getElementById('user-display-name').textContent = sanitize(window.profile_details.name);
+
+            // Fetch assignments
+            const assignments = db.getCollection(window.DB_KEYS.ASSIGNMENTS);
+            const myAssignments = assignments.filter(a => a.teacher_id === teacherId);
+
+            // Fetch subjects
+            const subjects = db.getCollection(window.DB_KEYS.SUBJECTS);
+            // Fetch classes
+            const classes = db.getCollection(window.DB_KEYS.CLASSES);
+            // Fetch students
+            const students = db.getCollection(window.DB_KEYS.STUDENTS);
+
+            // Calculate stats
+            const uniqueClassesIds = [...new Set(myAssignments.map(a => a.class_id))];
+            const uniqueSubjectsIds = [...new Set(myAssignments.map(a => a.subject_id))];
+            const totalStudents = students.filter(s => uniqueClassesIds.map(Number).includes(Number(s.class_id)) && s.status === 'active').length;
+
+            document.getElementById('stat-classes').textContent = uniqueClassesIds.length;
+            document.getElementById('stat-subjects').textContent = uniqueSubjectsIds.length;
+            document.getElementById('stat-students').textContent = totalStudents;
+
+            // Render mapped classes table
+            const tableContainer = document.getElementById('assignments-list');
+            if (myAssignments.length > 0) {
+                tableContainer.innerHTML = myAssignments.map(a => {
+                    const cls = classes.find(c => Number(c.id) === Number(a.class_id));
+                    const sub = subjects.find(s => s.id === a.subject_id);
+                    return `
+                        <tr>
+                            <td style="font-weight: 600;">${sanitize(cls ? cls.class_name : 'N/A')}</td>
+                            <td><span class="badge badge-info">${sanitize(cls ? cls.section : 'N/A')}</span></td>
+                            <td style="font-weight: 600;">${sanitize(sub ? sub.subject_name : 'N/A')}</td>
+                            <td><span class="badge badge-warning">${sanitize(sub ? sub.subject_code : 'N/A')}</span></td>
+                        </tr>
+                    `;
+                }).join('');
+            } else {
+                tableContainer.innerHTML = '<tr><td colspan="4" style="text-align: center; color: var(--text-muted); padding: 24px;">No class mappings found.</td></tr>';
+            }
+
+            // Render notices
+            const notices = db.getCollection(window.DB_KEYS.NOTICES);
+            const teacherNotices = notices.filter(n => n.target_audience === 'all' || n.target_audience === 'teachers').slice(0, 5);
+            const noticesContainer = document.getElementById('notices-list');
+
+            if (teacherNotices.length > 0) {
+                noticesContainer.innerHTML = teacherNotices.map(n => `
+                    <div class="notice-timeline-item">
+                        <div class="notice-timeline-marker"></div>
+                        <div class="notice-timeline-content">
+                            <div class="notice-timeline-header">
+                                <h4 class="notice-timeline-title">${sanitize(n.title)}</h4>
+                                <span class="notice-timeline-date">${sanitize(n.date)}</span>
+                            </div>
+                            <p class="notice-timeline-body">${sanitize(n.content)}</p>
+                        </div>
+                    </div>
+                `).join('');
+            } else {
+                noticesContainer.innerHTML = '<div style="color: var(--text-muted); text-align: center; padding: 24px;">No notices posted.</div>';
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Subjects | SchoolERP-Pro</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/animation.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="../css/teacher.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="../js/db.js"></script>
+    <script src="../js/auth.js"></script>
+</head>
+<body>
+    <div class="dashboard-wrapper">
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <i class="fa-solid fa-graduation-cap"></i>
+                <span>SchoolERP-Pro</span>
+            </div>
+            <div class="sidebar-user">
+                <div class="sidebar-user-avatar"><i class="fa-solid fa-chalkboard-user"></i></div>
+                <div class="sidebar-user-info">
+                    <div class="sidebar-user-name" id="user-display-name">Loading...</div>
+                    <div class="sidebar-user-role">Educator</div>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-item-link">
+                    <i class="fa-solid fa-gauge"></i> Dashboard
+                </a>
+                <a href="attendance.html" class="nav-item-link">
+                    <i class="fa-solid fa-calendar-check"></i> Mark Attendance
+                </a>
+                <a href="marks.html" class="nav-item-link">
+                    <i class="fa-solid fa-file-signature"></i> Manage Marks
+                </a>
+                <a href="homework.html" class="nav-item-link">
+                    <i class="fa-solid fa-book-open"></i> Homework Assignments
+                </a>
+                <a href="subjects.html" class="nav-item-link active">
+                    <i class="fa-solid fa-book"></i> My Subjects
+                </a>
+                <a href="profile.html" class="nav-item-link">
+                    <i class="fa-solid fa-user"></i> My Profile
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <button onclick="db.logout()" class="nav-item-link text-danger" style="background: none; border: none; width: 100%; text-align: left; cursor: pointer; padding: 12px 16px;">
+                    <i class="fa-solid fa-right-from-bracket"></i> Log Out
+                </button>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="top-header">
+                <div class="header-left">
+                    <button class="sidebar-toggle-btn" id="toggle-sidebar-btn"><i class="fa-solid fa-bars"></i></button>
+                    <h1 class="header-title">My Subjects & Curriculums</h1>
+                </div>
+                <div class="header-right">
+                    <button class="header-action-btn" id="theme-toggle-btn"><i class="fa-solid fa-moon" id="theme-toggle-icon"></i></button>
+                </div>
+            </header>
+
+            <!-- Table Card -->
+            <div class="glass-card anim-slide-up">
+                <div class="card-header">
+                    <h3 class="card-title">Assigned Classes</h3>
+                    <i class="fa-solid fa-book-bookmark text-muted"></i>
+                </div>
+                <div class="card-body" style="padding: 0;">
+                    <div class="table-responsive">
+                        <table class="table-custom">
+                            <thead>
+                                <tr>
+                                    <th>Subject Name</th>
+                                    <th>Subject Code</th>
+                                    <th>Assigned Class</th>
+                                    <th>Class Section</th>
+                                    <th style="text-align: right;">Total Active Students</th>
+                                </tr>
+                            </thead>
+                            <tbody id="subjects-list">
+                                <!-- JS loops dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../js/dashboard.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const teacherId = window.profile_details.id;
+            document.getElementById('user-display-name').textContent = sanitize(window.profile_details.name);
+
+            const assignments = db.getCollection(window.DB_KEYS.ASSIGNMENTS);
+            const myAssignments = assignments.filter(a => a.teacher_id === teacherId);
+            const subjects = db.getCollection(window.DB_KEYS.SUBJECTS);
+            const classes = db.getCollection(window.DB_KEYS.CLASSES);
+            const students = db.getCollection(window.DB_KEYS.STUDENTS);
+
+            const container = document.getElementById('subjects-list');
+            if (myAssignments.length > 0) {
+                container.innerHTML = myAssignments.map(a => {
+                    const sub = subjects.find(s => s.id === a.subject_id);
+                    const cls = classes.find(c => Number(c.id) === Number(a.class_id));
+                    const studentCount = students.filter(s => Number(s.class_id) === Number(a.class_id) && s.status === 'active').length;
+
+                    return `
+                        <tr>
+                            <td style="font-weight: 600;">${sanitize(sub ? sub.subject_name : 'N/A')}</td>
+                            <td><span class="badge badge-info">${sanitize(sub ? sub.subject_code : 'N/A')}</span></td>
+                            <td style="font-weight: 600;">${sanitize(cls ? cls.class_name : 'N/A')}</td>
+                            <td>${sanitize(cls ? cls.section : 'N/A')}</td>
+                            <td style="text-align: right; font-weight: 700; color: var(--primary);">${studentCount}</td>
+                        </tr>
+                    `;
+                }).join('');
+            } else {
+                container.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 40px;">No subject assignments mapped.</td></tr>';
+            }
+        });
+    </script>
+</body>
+</html>
